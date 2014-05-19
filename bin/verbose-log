@@ -1,13 +1,38 @@
 #!/bin/bash
 #
-# Usage: verbose-log [level]
+# Usage: verbose-log [-c prefix_char] [-p prefix] [level]
 #
+
+. $EZVM_COMMANDS_DIR/libs/usage.sh
+
+PREFIX_STR="#"
+PREFIX=" "
+
+while getopts ":c:p:" flag; do
+    case "$flag" in
+        c)
+            PREFIX_STR=$OPTARG
+            ;;
+        p)
+            PREFIX=$OPTARG
+            ;;
+        *)
+            printUsageAndExit ;;
+    esac
+done
+shift $((OPTIND-1))
 
 # Set level to first argument, or "1" if no argument
 level=${1:-1}
 
 # Inherit EZVM_VERBOSITY from environment, if any; use "1" as default
 EZVM_VERBOSITY=${EZVM_VERBOSITY:-1}
+
+PL=$((${SHLVL:-1}-1))
+
+for (( i=0; i<$PL; i++ )); do
+    PREFIX="$PREFIX_STR$PREFIX"
+done
 
 # If the current log level is higher than the EZVM_VERBOSITY level,
 # then we're not interested in seeing this log message
@@ -28,10 +53,10 @@ fi
 if [ ! -z $OS ]; then
     # In Windows we need to send \n\r line endings or the usage isn't readable
     if echo $OS | grep -i '^Windows' > /dev/null; then
-        cat | sed -e 's,\n,\n\r,g'
+        cat | sed -e 's,\n,\n\r,g' -e "s,^,$PREFIX,g"
         exit 0
     fi
 fi
 
-cat
+cat | sed -e "s,^,$PREFIX,g"
 exit 0

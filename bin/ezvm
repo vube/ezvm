@@ -7,44 +7,20 @@
 
 export EZVM_VERBOSITY=${EZVM_VERBOSITY:-1}
 
-# BASE_DIR is ..
-BASE_DIR="$(dirname $(dirname $0))"
+# EZVM_BASE_DIR is ..
+export EZVM_BASE_DIR="$(dirname $(dirname $0))"
+
+export EZVM_BIN_DIR="$EZVM_BASE_DIR/bin"
+export EZVM_COMMANDS_DIR="$EZVM_BASE_DIR/commands"
+export EZVM_ETC_DIR="$EZVM_BASE_DIR/etc"
 
 # USAGE.txt filename
-USAGE_FILE="$BASE_DIR/commands/USAGE.txt"
+USAGE_FILE="$EZVM_COMMANDS_DIR/USAGE.txt"
 
-log_msg() {
-    level=$1
-    shift
+# Slurp up some useful libs
+. $EZVM_COMMANDS_DIR/libs/log.sh
+. $EZVM_COMMANDS_DIR/libs/usage.sh
 
-    echo $@ | $BASE_DIR/bin/verbose-log $level
-}
-
-printUsageAndExit() {
-    {
-        if [ ! -e $USAGE_FILE ]; then
-            echo "Warning: Invalid usage"
-            echo "ERROR: No such usage file: $USAGE_FILE"
-            exit 1
-        fi
-
-        wrote=0
-
-        # If there is an OS environment variable (it gets set by Windows, maybe others)
-        if [ ! -z $OS ]; then
-            # In Windows we need to send \n\r line endings or the usage isn't readable
-            if echo $OS | grep -i '^Windows' > /dev/null; then
-                cat $USAGE_FILE | sed -e 's,\n,\n\r,g'
-                wrote=1
-            fi
-        fi
-
-        # If we didn't write it out already, do it now
-        [ $wrote = 0 ] && cat $USAGE_FILE
-
-    } 1>&2 # Send all output to STDERR
-    exit 1 # Exit with non-success code
-}
 
 command=$1
 
@@ -54,9 +30,9 @@ case "$command" in
 
         shift # Remove command from arguments list
 
-        script="$BASE_DIR/commands/$command.sh"
+        script="$EZVM_COMMANDS_DIR/$command.sh"
         if [ -r $script ]; then
-            USAGE_FILE="$BASE_DIR/commands/USAGE-$command.txt"
+            USAGE_FILE="$EZVM_COMMANDS_DIR/USAGE-$command.txt"
             . $script
         else
             echo "ERROR: No such command: $script" 1>&2

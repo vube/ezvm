@@ -18,7 +18,7 @@ while getopts ":qV:" flag; do
 done
 shift $((OPTIND-1))
 
-$BASE_DIR/bin/verbose-log 2 <<END_LOG
+$EZVM_BIN_DIR/verbose-log 2 <<END_LOG
 #
 # $0 selfupdate $ORIGINAL_ARGS
 #
