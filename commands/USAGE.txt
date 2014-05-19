@@ -1,0 +1,7 @@
+
+Usage: ezvm <command>
+
+Where <command> is one of:
+
+    help    Print this screen and exit.
+    update  Update the ezvm installation.

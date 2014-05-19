@@ -1,0 +1,7 @@
+
+Usage: ezvm update [-q] [-s] [-V x]
+
+    -q      Quiet.  Don't print status updates and diagnostic info.  Sets verbosity level = 0.
+    -s      Selfupdate before running the VM update procedure.
+    -V x    Set verbosity level to x.  Higher verbosity levels result in more output, mainly
+            good for debugging.  Default: 1

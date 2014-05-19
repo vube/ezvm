@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Usage: verbose-log [level]
+#
+
+# Set level to first argument, or "1" if no argument
+level=${1:-1}
+
+# Inherit EZVM_VERBOSITY from environment, if any; use "1" as default
+EZVM_VERBOSITY=${EZVM_VERBOSITY:-1}
+
+# If the current log level is higher than the EZVM_VERBOSITY level,
+# then we're not interested in seeing this log message
+if [ "$level" -gt "$EZVM_VERBOSITY" ]; then
+#    echo "log level higher than verbosity level, ignoring"
+    exit 0
+fi
+
+# If there is NO input waiting in STDIN then we don't want to wait for it
+# as if we're an interactive program.  We are not.
+if ! read -t 0; then
+    echo "Warning: No input was given to STDIN for $0" 1>&2
+    exit 1
+fi
+
+# Write out the contents of STDIN
+# If there is an OS environment variable (it gets set by Windows, maybe others)
+if [ ! -z $OS ]; then
+    # In Windows we need to send \n\r line endings or the usage isn't readable
+    if echo $OS | grep -i '^Windows' > /dev/null; then
+        cat | sed -e 's,\n,\n\r,g'
+        exit 0
+    fi
+fi
+
+cat
+exit 0
