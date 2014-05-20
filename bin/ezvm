@@ -8,7 +8,7 @@
 export EZVM_VERBOSITY=${EZVM_VERBOSITY:-1}
 
 # EZVM_BASE_DIR is ..
-export EZVM_BASE_DIR="$(dirname $(dirname $0))"
+export EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
 
 export EZVM_BIN_DIR="$EZVM_BASE_DIR/bin"
 export EZVM_COMMANDS_DIR="$EZVM_BASE_DIR/commands"

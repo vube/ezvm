@@ -11,7 +11,7 @@ to get the latest changes applied to their work-in-progress.
 
 ```bash
 $ git clone https://github.com/vube/ezvm
-$ mv ezvm /usr/local/
+$ sudo mv ezvm /usr/local/
 ```
 
 Then either add `/usr/local/ezvm/bin` to your path like
@@ -24,6 +24,22 @@ OR you can symlink `ezvm` from `/usr/local/bin` assuming that is already in your
 
 ```bash
 $ ln -sf /usr/local/ezvm/bin/ezvm /usr/local/bin/ezvm
+```
+
+### Install the realpath package
+
+ezvm depends on the `realpath` package.
+
+#### Installing realpath via Chef
+
+```ruby
+package "realpath"
+```
+
+### Installing realpath by hand
+
+```bash
+$ sudo apt-get install realpath
 ```
 
 ## Usage
