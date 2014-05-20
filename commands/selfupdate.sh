@@ -19,12 +19,17 @@ done
 shift $((OPTIND-1))
 
 $EZVM_BIN_DIR/verbose-log 2 <<END_LOG
-#
-# $0 selfupdate $ORIGINAL_ARGS
-#
+
+$0 selfupdate $ORIGINAL_ARGS
+
 END_LOG
 
 log_msg 1 "Pulling latest ezvm release from Github"
+
+if ! cd "$EZVM_BASE_DIR"; then
+    echo "FATAL: Cannot cd to BASE_DIR: $EZVM_BASE_DIR" 1>&2
+    exit 4
+fi
 
 if ! git pull; then
     # `git pull` failed!
