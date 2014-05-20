@@ -26,9 +26,20 @@ if [ ! -d $FIRST_TIME_SETUP_DIR ]; then
     mkdir -p $FIRST_TIME_SETUP_DIR || exit 12
 fi
 
+# If there is a home directory in the local content dir (etc/local by default)
+# then we want to copy it to the system.
+HOME_SRC="$LOCAL_CONTENT_DIR/home"
+if [ -d $HOME_SRC ]; then
 
-## TODO: first-time-setup logic goes here
+    # If there is a version specifically for the current user, use that version
+    # instead of the default version
+    if [ -d "$HOME_SRC/users/$LOCAL_USERNAME" ]; then
+        HOME_SRC="$HOME_SRC/users/$LOCAL_USERNAME"
+    fi
 
+    log_msg 3 "cp -rf $HOME_SRC $HOME"
+    cp -rf $HOME_SRC $HOME
+fi
 
 log_msg 1 "First time setup completed successfully"
-touch $FIRST_TIME_SETUP_FILE
+date > $FIRST_TIME_SETUP_FILE

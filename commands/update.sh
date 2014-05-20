@@ -5,10 +5,15 @@
 #
 
 WITH_SELF_UPDATE=0
+. $EZVM_COMMANDS_DIR/libs/settings.sh
+
 ORIGINAL_ARGS=$@
 
-while getopts ":qsV:" flag; do
+while getopts ":d:qsV:" flag; do
     case "$flag" in
+        d)
+            LOCAL_CONTENT_DIR=$OPTARG
+            ;;
         q)
             export EZVM_VERBOSITY=0
             ;;
