@@ -1,9 +1,0 @@
-#
-# Common settings
-#
-
-FIRST_TIME_SETUP_FILE=$EZVM_ETC_DIR/.ezvm/first-time-setup
-
-LOCAL_USERNAME=${LOCAL_USERNAME:-$USER}
-LOCAL_CONTENT_DIR=${LOCAL_CONTENT_DIR:-$EZVM_ETC_DIR/local}
-

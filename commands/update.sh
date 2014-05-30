@@ -5,14 +5,13 @@
 #
 
 WITH_SELF_UPDATE=0
-. $EZVM_COMMANDS_DIR/libs/settings.sh
 
 ORIGINAL_ARGS=$@
 
 while getopts ":d:qsV:" flag; do
     case "$flag" in
         d)
-            LOCAL_CONTENT_DIR=$OPTARG
+            EZVM_LOCAL_CONTENT_DIR=$OPTARG
             ;;
         q)
             export EZVM_VERBOSITY=0
@@ -42,10 +41,10 @@ if [ $WITH_SELF_UPDATE = 1 ]; then
     log_msg 1 "Updating ezvm..."
 
     # run `ezvm selfupdate` in a sub-shell so it doesn't modify our variables
-    ( . $EZVM_COMMANDS_DIR/selfupdate.sh ) || exit $?
+    ( . $EZVM_COMMANDS_DIR/selfupdate.sh ) || die "self update failed" $?
 fi
 
 # Now it's quite possible that all the files we rely on have changed.
 # Maybe even the files we've already run and executed.
 
-/bin/bash $EZVM_COMMANDS_DIR/utilities/update-procedure.sh || exit $?
+( . $EZVM_COMMANDS_DIR/utilities/update-procedure.sh ) || die "update procedure failed" $?

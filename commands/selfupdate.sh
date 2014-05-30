@@ -27,16 +27,9 @@ END_LOG
 log_msg 1 "Pulling latest ezvm release from Github"
 
 if ! cd "$EZVM_BASE_DIR"; then
-    echo "FATAL: Cannot cd to BASE_DIR: $EZVM_BASE_DIR" 1>&2
-    exit 4
+    die "Cannot cd to EZVM_BASE_DIR: $EZVM_BASE_DIR" 4
 fi
 
 if ! git pull; then
-    # `git pull` failed!
-    {
-        echo
-        echo "FATAL: git pull failed"
-        echo
-    } 1>&2
-    exit 3
+    die "git pull failed" 3
 fi

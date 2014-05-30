@@ -2,14 +2,12 @@ printUsageAndExit() {
     {
         if [ -z $USAGE_FILE ]; then
             echo "Warning: Invalid usage"
-            echo "ERROR: Cannot call printUsageAndExit without defining $USAGE_FILE"
-            exit 1
+            die "Cannot call printUsageAndExit without defining $USAGE_FILE"
         fi
 
         if [ ! -e $USAGE_FILE ]; then
             echo "Warning: Invalid usage"
-            echo "ERROR: No such usage file: $USAGE_FILE"
-            exit 1
+            die "No such usage file: $USAGE_FILE"
         fi
 
         wrote=0

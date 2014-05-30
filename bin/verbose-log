@@ -3,7 +3,13 @@
 # Usage: verbose-log [-c prefix_char] [-p prefix] [level]
 #
 
-. $EZVM_COMMANDS_DIR/libs/usage.sh
+# EZVM_BASE_DIR is ..
+export EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
+
+# Slurp up some useful libs
+. $EZVM_BASE_DIR/libs/settings.sh
+. $EZVM_BASE_DIR/libs/common.sh
+. $EZVM_BASE_DIR/libs/usage.sh
 
 PREFIX_STR="#"
 PREFIX=" "

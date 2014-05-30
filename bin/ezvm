@@ -5,21 +5,17 @@
 # See ../commands/USAGE.txt for usage information
 #
 
-export EZVM_VERBOSITY=${EZVM_VERBOSITY:-1}
-
 # EZVM_BASE_DIR is ..
 export EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
 
-export EZVM_BIN_DIR="$EZVM_BASE_DIR/bin"
-export EZVM_COMMANDS_DIR="$EZVM_BASE_DIR/commands"
-export EZVM_ETC_DIR="$EZVM_BASE_DIR/etc"
+# Slurp up some useful libs
+. $EZVM_BASE_DIR/libs/settings.sh
+. $EZVM_BASE_DIR/libs/log.sh
+. $EZVM_BASE_DIR/libs/common.sh
+. $EZVM_BASE_DIR/libs/usage.sh
 
 # USAGE.txt filename
 USAGE_FILE="$EZVM_COMMANDS_DIR/USAGE.txt"
-
-# Slurp up some useful libs
-. $EZVM_COMMANDS_DIR/libs/log.sh
-. $EZVM_COMMANDS_DIR/libs/usage.sh
 
 
 command=$1
@@ -35,8 +31,7 @@ case "$command" in
             USAGE_FILE="$EZVM_COMMANDS_DIR/USAGE-$command.txt"
             . $script
         else
-            echo "ERROR: No such command: $script" 1>&2
-            exit 2
+            die "No such command: $script"
         fi
         ;;
 
