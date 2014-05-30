@@ -1,0 +1,19 @@
+#!/bin/sh
+
+. $EZVM_BASE_DIR/libs/plugin-init.sh
+. $EZVM_BASE_DIR/libs/git.sh
+
+echo `basename $0`
+
+# Create a temp directory
+dir=$(mktemp -t -d ezvm.test.XXXXXXXX)
+[ $? = 0 ] || die "Create temp dir failed"
+log_msg 1 "Temp Directory: $dir"
+
+changeDir "$dir"
+
+gitCheckout "https://github.com/vube/ezvm"
+
+gitCheckout "https://github.com/vube/vagrant-boxer" "$dir" "vagrant-boxer.test-dir" "develop"
+
+gitCheckout "https://github.com/vube/ezvm" "$dir" "ezvm" "develop"
