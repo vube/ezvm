@@ -12,6 +12,7 @@ export EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
 . $EZVM_BASE_DIR/libs/settings.sh
 . $EZVM_BASE_DIR/libs/log.sh
 . $EZVM_BASE_DIR/libs/common.sh
+. $EZVM_BASE_DIR/libs/sudo.sh
 . $EZVM_BASE_DIR/libs/usage.sh
 
 # USAGE.txt filename

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. $EZVM_BASE_DIR/libs/plugin-init.sh
+. $EZVM_BASE_DIR/libs/sudo.sh
+
+haveSudo && have_sudo=1
+haveRootUser && have_root=1
+
+echo `basename $0` "have_sudo=${have_sudo:-0} have_root=${have_root:-0}"
