@@ -72,7 +72,7 @@ runCommandAsUser() {
 
         # We have sudo on this system
         # -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        sudo su "$user" -E -c "$command"
+        sudo -E su "$user" -c "$command"
         r=$?
 
     elif [ $EZVM_HAVE_ROOT = 1 -o "$user" != root ]; then
