@@ -71,8 +71,9 @@ runCommandAsUser() {
     if [ $EZVM_HAVE_SUDO = 1 ]; then
 
         # We have sudo on this system
-        # -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        sudo -E su "$user" -c "$command"
+        # sudo -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
+        # su -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
+        sudo -E su "$user" -m -c "$command"
         r=$?
 
     elif [ $EZVM_HAVE_ROOT = 1 -o "$user" != root ]; then
@@ -80,7 +81,7 @@ runCommandAsUser() {
         # There is no sudo, but there is a root user,
         # or we're trying to run as a non-root user.
         # -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        su -m -c "$command" "$user"
+        su "$user" -m -c "$command"
         r=$?
 
     else
