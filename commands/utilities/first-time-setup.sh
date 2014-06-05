@@ -34,7 +34,7 @@ if [ -d $EZVM_HOME_SRC ]; then
     fi
 
     log_msg 3 "cp -rf $EZVM_HOME_SRC $HOME"
-    cp -rf $EZVM_HOME_SRC $HOME
+    cp -rf $EZVM_HOME_SRC $HOME || die "Failed to copy home directory files from $EZVM_HOME_SRC to $HOME" $?
 fi
 
 log_msg 1 "First time setup completed successfully"
