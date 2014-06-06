@@ -67,3 +67,39 @@ This will update ezvm itself to the latest release.
 ```bash
 $ ezvm selfupdate
 ```
+
+
+### ezvm exec
+
+This is useful for testing your local update procedures.
+
+```bash
+$ ezvm exec 010-update-script.sh
+```
+
+The above example will run the script `010-update-script.sh` from your local update directory,
+by default `$EZVM_BASE_DIR/etc/local/update`
+
+
+# Testing
+
+The test procedures here are pretty simple, they execute ezvm and you essentially have to verify
+that it's working manually.  Old school!
+
+## test/test.sh
+
+This script will test everything.  It executes against the `test/fixtures` directory in a very verbose
+output mode.
+
+## test/exec.sh
+
+This allows you to run just single update tests, same as `ezvm exec`
+
+```bash
+$ test/exec.sh 003-copy-home-dir
+```
+
+The example above just runs the
+[test/fixtures/update/003-copy-home-dir](browse/test/fixtures/update/003-copy-home-dir)
+update procedure.  Change it up to
+run any specific one you want to test in more detail.

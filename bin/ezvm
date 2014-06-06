@@ -23,7 +23,7 @@ command=$1
 
 case "$command" in
 
-    selfupdate|update)
+    selfupdate|update|exec)
 
         shift # Remove command from arguments list
 

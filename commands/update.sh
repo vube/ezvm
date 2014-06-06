@@ -36,6 +36,9 @@ $EZVM_BIN_DIR/verbose-log 2 <<END_LOG
 $0 update $ORIGINAL_ARGS
 Working on BASE=$EZVM_BASE_DIR
 
+END_LOG
+
+$EZVM_BIN_DIR/verbose-log 20 <<END_LOG
 User: `id`
 Environment:
 `env`
@@ -61,5 +64,13 @@ if [ $WITH_SELF_UPDATE = 1 ]; then
 else
 
     # Not running selfupdate, so just run the update procedure
+
+    # First time setup, if needed
+    if [ ! -e $FIRST_TIME_SETUP_FILE ]; then
+        log_msg 1 "Executing first time setup..."
+        ( . $EZVM_COMMANDS_DIR/utilities/first-time-setup.sh ) || die "first time setup failed" $?
+    fi
+
+    # Now the update procedure
     ( . $EZVM_COMMANDS_DIR/utilities/update-procedure.sh ) || die "update procedure failed" $?
 fi
