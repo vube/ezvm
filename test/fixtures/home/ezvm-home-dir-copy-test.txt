@@ -1,0 +1,2 @@
+This is just a test file to ensure that the copy-home-dir.sh lib is
+actually putting this in your home dir.

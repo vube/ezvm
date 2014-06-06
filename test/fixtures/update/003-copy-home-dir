@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. $EZVM_BASE_DIR/libs/plugin-init.sh
+. $EZVM_BASE_DIR/libs/git.sh
+
+echo `basename $0`
+
+. $EZVM_BASE_DIR/libs/copy-home-dir.sh
+copy_home_dir
