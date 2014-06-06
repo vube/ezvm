@@ -7,6 +7,7 @@
 # Private Variables:
 EZVM_LIB_SUDO_INIT=0
 EZVM_HAVE_SUDO=0
+EZVM_HAVE_SU=0
 EZVM_HAVE_ROOT=0
 
 
@@ -24,12 +25,19 @@ initSudoLib() {
     else
         log_msg 4 "Notice: sudo is not found on this system"
 
-        # We don't have sudo, we need to know if we have a root user
+        # We don't have sudo, we need to know if we have su
         # on this system. Some systems (cygwin) do not.
-        if su -c "exit" root > /dev/null 2>&1; then
-            EZVM_HAVE_ROOT=1
+        if su -c "exit" "$USER" > /dev/null 2>&1; then
+            EZVM_HAVE_SU=1
+
+            # We have su, do we also have a root user?
+            if su -c "exit" root > /dev/null 2>&1; then
+                EZVM_HAVE_ROOT=1
+            else
+                log_msg 4 "Notice: there is no root user on this system"
+            fi
         else
-            log_msg 4 "Notice: there is no root user on this system"
+            log_msg 4 "Notice: su is not found on this system"
         fi
     fi
 }
@@ -64,6 +72,7 @@ runCommandAsUser() {
     local command=$1
     local user=$2
     local r=0
+    local ran=0
 
     # initSudoLib if needed
     [ $EZVM_LIB_SUDO_INIT = 1 ] || initSudoLib
@@ -75,19 +84,40 @@ runCommandAsUser() {
         # su -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
         sudo -E su "$user" -m -c "$command"
         r=$?
+        ran=1
 
-    elif [ $EZVM_HAVE_ROOT = 1 -o "$user" != root ]; then
+    elif [ $EZVM_HAVE_SU = 1 ]; then
 
-        # There is no sudo, but there is a root user,
-        # or we're trying to run as a non-root user.
-        # -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        su "$user" -m -c "$command"
-        r=$?
+        # We have `su`, try to use that to run as the appropriate user
 
-    else
+        if [ "$user" = root ]; then
 
-        # There is no way to run this as another user.
-        # Just run it as ourselves.
+            # We're trying to run this as root
+
+            if [ $EZVM_HAVE_ROOT = 1 ]; then
+
+                # There is no sudo, but there is a root user,
+                # and we're trying to run this command as root.
+                # -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
+                su "$user" -m -c "$command"
+                r=$?
+                ran=1
+            fi
+
+        elif [ "$user" != "$USER" ]; then
+
+            # We're trying to run this as non-root and non-current-user
+
+            # -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
+            su "$user" -m -c "$command"
+            r=$?
+            ran=1
+        fi
+    fi
+
+    if [ $ran = 0 ]; then
+        # There is no way to run this as another user, or we're trying to run it
+        # as ourselves anyway.
 
         if [ "$user" != "$USER" ]; then
             log_msg 2 "Notice: Cannot run command as user=$user, running as $USER"
