@@ -10,7 +10,7 @@ while getopts ":qV:" flag; do
             export EZVM_VERBOSITY=0
             ;;
         V)
-            export EZVM_VERBOSITY=$OPTARG
+            export EZVM_VERBOSITY="$OPTARG"
             ;;
         *)
             printUsageAndExit ;;

@@ -11,7 +11,7 @@ ORIGINAL_ARGS=$@
 while getopts ":d:qsSV:" flag; do
     case "$flag" in
         d)
-            EZVM_LOCAL_CONTENT_DIR=$OPTARG
+            EZVM_LOCAL_CONTENT_DIR="$OPTARG"
             ;;
         q)
             export EZVM_VERBOSITY=0
@@ -23,7 +23,7 @@ while getopts ":d:qsSV:" flag; do
             WITH_SELF_UPDATE=0
             ;;
         V)
-            export EZVM_VERBOSITY=$OPTARG
+            export EZVM_VERBOSITY="$OPTARG"
             ;;
         *)
             printUsageAndExit ;;
