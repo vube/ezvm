@@ -16,7 +16,7 @@ EZVM_HOME_SRC=${EZVM_HOME_SRC:-"$EZVM_LOCAL_CONTENT_DIR/home"}
 copy_home_dir_src() {
 
     local src="$1"
-    local files=$(find "$src" -maxdepth 1 | sed -e "s,^$src/*,," | grep -v '^users$') || die "Error searching home source: $src" $?
+    local files="$(find "$src" -maxdepth 1 | sed -e "s,^$src/*,," | grep -v '^users$')"
     local f
 
     log_msg 7 "Copying home dir files from $src"
