@@ -5,10 +5,10 @@
 
 # DON'T use these outside of this lib.  These should be considered
 # Private Variables:
-EZVM_LIB_SUDO_INIT=0
-EZVM_HAVE_SUDO=0
-EZVM_HAVE_SU=0
-EZVM_HAVE_ROOT=0
+EZVM_LIB_SUDO_INIT="${EZVM_LIB_SUDO_INIT:-0}"
+EZVM_HAVE_SUDO="${EZVM_HAVE_SUDO:-0}"
+EZVM_HAVE_SU="${EZVM_HAVE_SU:-0}"
+EZVM_HAVE_ROOT="${EZVM_HAVE_ROOT:-0}"
 
 
 initSudoLib() {
@@ -16,23 +16,25 @@ initSudoLib() {
     # If we already initialized, return immediately
     [ $EZVM_LIB_SUDO_INIT = 1 ] && return
 
-    EZVM_LIB_SUDO_INIT=1
+    # Export that we've initialized to the environment, so sub-processes won't have
+    # to initialize or test us again.
+    export EZVM_LIB_SUDO_INIT=1
 
     # Find out if we have sudo on this system.
     # Some systems do not use sudo.
     if which sudo > /dev/null 2>&1; then
-        EZVM_HAVE_SUDO=1
+        export EZVM_HAVE_SUDO=1
     else
         log_msg 4 "Notice: sudo is not found on this system"
 
         # We don't have sudo, we need to know if we have su
         # on this system. Some systems (cygwin) do not.
         if su -c "exit" "$USER" > /dev/null 2>&1; then
-            EZVM_HAVE_SU=1
+            export EZVM_HAVE_SU=1
 
             # We have su, do we also have a root user?
             if su -c "exit" root > /dev/null 2>&1; then
-                EZVM_HAVE_ROOT=1
+                export EZVM_HAVE_ROOT=1
             else
                 log_msg 4 "Notice: there is no root user on this system"
             fi
@@ -47,8 +49,6 @@ initSudoLib() {
 # Use this to test if we have `sudo` on this system
 # Returns: 0 if we DO HAVE SUDO, 1 if we do NOT have sudo
 haveSudo() {
-    # initSudoLib if needed
-    [ $EZVM_LIB_SUDO_INIT = 1 ] || initSudoLib
     # Return TRUE(0) if we have sudo, else FALSE(1)
     [ $EZVM_HAVE_SUDO = 1 ] && return 0
     return 1
@@ -59,8 +59,6 @@ haveSudo() {
 # Use this to test if we have a root user on this system
 # Returns: 0 if we DO HAVE ROOT, 1 if we do NOT have root
 haveRootUser() {
-    # initSudoLib if needed
-    [ $EZVM_LIB_SUDO_INIT = 1 ] || initSudoLib
     # Return TRUE(0) if we have a root user, else FALSE(1)
     [ $EZVM_HAVE_ROOT = 1 ] && return 0
     return 1
@@ -73,9 +71,6 @@ runCommandAsUser() {
     local user=$2
     local r=0
     local ran=0
-
-    # initSudoLib if needed
-    [ $EZVM_LIB_SUDO_INIT = 1 ] || initSudoLib
 
     if [ $EZVM_HAVE_SUDO = 1 ]; then
 
@@ -134,3 +129,7 @@ runCommandAsRoot() {
     runCommandAsUser "$1" root
     return $?
 }
+
+
+# initSudoLib if needed
+[ $EZVM_LIB_SUDO_INIT = 1 ] || initSudoLib
