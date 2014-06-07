@@ -81,8 +81,7 @@ runCommandAsUser() {
 
         # We have sudo on this system
         # sudo -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        # su -m means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        sudo -E su "$user" -m -c "$command"
+        sudo -E -u "$user" "$command"
         r=$?
         ran=1
 
