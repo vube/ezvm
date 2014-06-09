@@ -76,7 +76,8 @@ runCommandAsUser() {
 
         # We have sudo on this system
         # sudo -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
-        sudo -E -u "$user" "$command"
+        # Here $command should NOT be quoted in case it contains arguments, we pass them raw to sudo
+        sudo -E -u "$user" -- $command
         r=$?
         ran=1
 
