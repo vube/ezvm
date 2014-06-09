@@ -26,8 +26,13 @@ createDir() {
 
     local dir=$1
     local mode=${2:-0775}
-    local group=${3:-user}
+    local group=${3:-""}
     local user=${4:-$USER}
+
+    # The default group is the user's group
+    if [ -z "$group" ]; then
+        group=$(id --group $user)
+    fi
 
 	if [ ! -d $dir ]; then
 	    install -d -m $mode -g $group -o $user $dir || die "Create dir failed: $dir"
