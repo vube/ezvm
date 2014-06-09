@@ -6,10 +6,10 @@
 
 gitCheckout() {
 
-	local repo_ident=$1
-	local base_dir=${2:-`pwd`}
-	local repo_dir=${3:-`basename "$repo_ident"`}
-	local fts_branch=${4:-master}
+	local repo_ident="$1"
+	local base_dir="${2:-`pwd`}"
+	local repo_dir="${3:-`basename "$repo_ident"`}"
+	local fts_branch="${4:-master}"
 
     log_msg 1 "==> Git: $repo_ident"
 
@@ -60,9 +60,9 @@ gitCheckout() {
 
 versionedLibInit() {
 
-	local repo=$1
-	local dir=${2:-`pwd`}
-	local fts_branch=${3:-master}
+	local repo="$1"
+	local dir="${2:-`pwd`}"
+	local fts_branch="${3:-master}"
 
 	log_msg 1 "==> Init versioned lib: $repo"
 
@@ -88,9 +88,9 @@ versionedLibInit() {
 
 versionedServiceInit() {
 
-	local repo=$1
-	local dir=${2:-`pwd`}
-	local fts_branch=${3:-master}
+	local repo="$1"
+	local dir="${2:-`pwd`}"
+	local fts_branch="${3:-master}"
 
 	log_msg 1 "==> Init service: $repo"
 
@@ -114,12 +114,12 @@ versionedServiceInit() {
 
 versionedNodeServiceInit() {
 
-    local repo=$1
-    local dir=${2:-`pwd`}
-    local fts_branch=${3:-master}
-    local supervisor_pgrep=${4:-}
-    local supervisor_command=${5:-}
-    local supervisor_user=${6:-$USER}
+    local repo="$1"
+    local dir="${2:-`pwd`}"
+    local fts_branch="${3:-master}"
+    local supervisor_pgrep="${4:-}"
+    local supervisor_command="${5:-}"
+    local supervisor_user="${6:-$USER}"
 
     log_msg 1 "==> Init Node.js service: $repo"
 
