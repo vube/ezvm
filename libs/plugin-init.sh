@@ -3,6 +3,7 @@
 . $EZVM_BASE_DIR/libs/settings.sh
 . $EZVM_BASE_DIR/libs/common.sh
 . $EZVM_BASE_DIR/libs/log.sh
+. $EZVM_BASE_DIR/libs/sudo.sh
 
 log_msg 5 "update plugin: $0"
 
