@@ -67,8 +67,8 @@ haveRootUser() {
 
 runCommandAsUser() {
 
-    local command=$1
-    local user=$2
+    local command="$1"
+    local user="${2:-$USER}"
     local r=0
     local ran=0
 
