@@ -54,25 +54,72 @@ package "realpath"
 $ sudo apt-get install realpath
 ```
 
+
 ## Usage
 
-### ezvm update
-
-This will update your VM.
+After you configure ezvm, you can use it thusly:
 
 ```bash
 $ ezvm update
 ```
 
-
-### ezvm selfupdate
-
-This will update ezvm itself to the latest release.
+The above will update your VM.
 
 ```bash
 $ ezvm selfupdate
 ```
 
+The above will update ezvm itself to the latest release.
+
+
+## Configuration
+
+### etc/local Directory
+
+The `etc/local` directory is the "Local Content Directory". Generally speaking, this is
+where you should store your own files.
+
+After you install ezvm you should then copy over the contents of `etc/local` from
+your own repository, and then ezvm is ready to run.
+
+The `etc/local` directory is excluded from Git, you must manage this directory.
+
+#### etc/local/update Directory
+
+`etc/local/update` is where you should put all of your update routines.
+You should put shell scripts here that will be executed in sorted order.
+
+The special file extension `.ROOT` (dot ROOT) tells ezvm to run this script
+as the root user.  If the file extension is not `.ROOT` then it will run with
+ordinary user permissions.
+
+See the [test/fixtures/update](browse/test/fixtures/update) directory for a sample
+of the kinds of things you could put in `etc/local/update`
+
+##### TODO: Tip for Local Content self-update-hook
+
+TODO: Write an example self-update-hook that will `git pull` the etc/local
+contents from whatever repository you store it at.  Thus every time you `ezvm update`
+you'll have all the latest copies of your own configs and scripts before updating.
+
+### etc/local/home Directory
+
+This directory is totally optional.
+
+IF this directory exists, then the first time `ezvm update` is run on a machine
+(and only the first time) the contents of this directory will be copied to your
+home directory.
+
+If you have multiple users who want their own files, each user should make a
+directory named `etc/local/home/{username}` where {username} is their username.
+If their own directory exists, its contents will be copied ON TOP of the generic
+home contents.
+
+If you cannot have specific usernames when you execute ezvm, you can optionally
+set the `EZVM_USERNAME` environment variable to emulate running as that user,
+and that user's home directory will be copied.
+
+## Advanced Usage
 
 ### ezvm exec
 
