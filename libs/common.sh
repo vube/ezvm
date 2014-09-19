@@ -11,7 +11,7 @@ warn() {
 die() {
     local exitCode=${2:-1}
 
-	echo "FATAL: $1" 1>&2
+	echo "FATAL ERROR: $1" 1>&2
 	exit $exitCode
 }
 
