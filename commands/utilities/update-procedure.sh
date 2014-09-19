@@ -84,7 +84,7 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         log_msg 1 "#"
 
         # IF $f is NOT an absolute filename
-        if [ "$(echo "$f" | grep -q '^/')" != "" ]; then
+        if [ "$(echo "$f" | grep -q '^/')" = "" ]; then
             # Then remove any leading "./" that MIGHT be there
             # and add a leading "./" so we KNOW it is there
             f="./$(echo "$f" | sed -e 's,^\.//*,,')"
