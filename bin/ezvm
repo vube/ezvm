@@ -7,8 +7,18 @@
 
 if [ -z "$EZVM_BASE_DIR" ]; then
     # EZVM_BASE_DIR is ..
-    bindir="$($(dirname "$0")/realpath "$0")"
-    export EZVM_BASE_DIR="$(dirname $(dirname "$bindir"))"
+
+    pushd . > /dev/null
+    EZVM_BASE_DIR="${BASH_SOURCE[0]}";
+    while([ -h "${EZVM_BASE_DIR}" ]); do
+        cd "$(dirname "${EZVM_BASE_DIR}")"
+        EZVM_BASE_DIR="$(readlink "$(basename "${EZVM_BASE_DIR}")")";
+    done
+    cd "$(dirname "${EZVM_BASE_DIR}")" > /dev/null
+    EZVM_BASE_DIR="$(pwd)";
+    popd  > /dev/null
+
+    export EZVM_BASE_DIR
 fi
 
 # Slurp up some useful libs
