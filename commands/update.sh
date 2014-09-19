@@ -5,10 +5,11 @@
 #
 
 WITH_SELF_UPDATE=0
+EZVM_TEST_MODE=${EZVM_TEST_MODE:-0}
 
 ORIGINAL_ARGS=$@
 
-while getopts ":d:qsSV:" flag; do
+while getopts ":d:qsSTV:" flag; do
     case "$flag" in
         d)
             EZVM_LOCAL_CONTENT_DIR="$OPTARG"
@@ -21,6 +22,9 @@ while getopts ":d:qsSV:" flag; do
             ;;
         S)
             WITH_SELF_UPDATE=0
+            ;;
+        T)
+            EZVM_TEST_MODE=1
             ;;
         V)
             export EZVM_VERBOSITY="$OPTARG"
@@ -41,7 +45,7 @@ END_LOG
 $EZVM_BIN_DIR/verbose-log 20 <<END_LOG
 User: `id`
 Environment:
-`env`
+`env | sort`
 
 END_LOG
 
@@ -61,7 +65,11 @@ if [ $WITH_SELF_UPDATE = 1 ]; then
 
     log_msg 10 "Re-running ezvm update with -S (no selfupdate) flag"
     $EZVM_BASE_DIR/bin/ezvm update $ORIGINAL_ARGS -S || die "ezvm update failed: exit code=$?" $?
-else
+
+# In TEST mode we don't actually want to update anything
+elif [ "$EZVM_TEST_MODE" = 0 ]; then
+
+    # NOT in TEST mode
 
     # Not running selfupdate, so just run the update procedure
 

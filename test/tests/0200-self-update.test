@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+
+. "$(dirname $0)/../include.sh"
+
+
+# Test that `ezvm selfupdate` invokes etc/local/self-update-hook
+#
+test_self_update_hook() {
+
+	# Run the script, check its output
+	expected="self-update-hook"
+	x=$(execEzvm selfupdate -V 0 -T)
+	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
+}
+
+
+# Test that `ezvm update -s` invokes etc/local/self-update-hook
+#
+test_update_with_s_flag_invokes_self_update_hook() {
+
+	# Run the script, check its output
+	expected="self-update-hook"
+	x=$(execEzvm update -s -V 0 -T)
+	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
+}
+
+
+autoRunTests

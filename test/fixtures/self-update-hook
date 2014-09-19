@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# This self-update-hook gets executed by `ezvm selfupdate`
+#
+# It runs AFTER ezvm has updated itself but BEFORE the new ezvm code
+# takes effect.  You shouldn't really care about that unless you're
+# a developer working on ezvm.
+#
+
+. $EZVM_BASE_DIR/libs/plugin-init.sh
+
+echo `basename $0`

@@ -15,12 +15,18 @@ fail() {
 	die "$msg"
 }
 
+execEzvm() {
+
+	command="$1"; shift
+
+	export EZVM_LOCAL_CONTENT_DIR="$EZVM_FIXTURES_DIR"
+
+	"$EZVM_BASE_DIR/bin/ezvm" $command -V 100 $@
+}
+
 execFixture() {
 
-	export EZVM_UPDATE_DIR="$EZVM_FIXTURES_DIR/update"
-	export EZVM_HOME_SRC="$EZVM_FIXTURES_DIR/home"
-
-	"$EZVM_BASE_DIR/bin/ezvm" exec -V 100 $@
+	execEzvm "exec" $@
 }
 
 runTest() {

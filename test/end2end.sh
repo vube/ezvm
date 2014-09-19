@@ -11,8 +11,7 @@ export EZVM_BASE_DIR="$(dirname $("$testdir/../bin/realpath" "$testdir"))"
 
 d=$("$testdir/../bin/realpath" "$testdir")
 
-export EZVM_UPDATE_DIR="$d/fixtures/update"
-export EZVM_HOME_SRC="$d/fixtures/home"
+export EZVM_LOCAL_CONTENT_DIR="$d/fixtures"
 
 cat <<END_HELO
 
@@ -24,7 +23,7 @@ At the end you will see a success message.
 
 END_HELO
 
-"$(dirname $d)/bin/ezvm" update $@ || exit $?
+"$(dirname $d)/bin/ezvm" update -s $@ || exit $?
 
 # Now let's do some cleanup stuff.  It's annoying that there is a file
 # in the home directory after running this test.

@@ -9,6 +9,6 @@ log_msg 5 "update plugin: $0"
 
 $EZVM_BASE_DIR/bin/verbose-log 50 <<EOF
 Environment:
-`env`
+`env | sort`
 
 EOF
