@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# This OPTIONAL file returns a list of all of the update scripts
+# to run, in the order you want to run them.
+#
+# This gets executed from the $EZVM_LOCAL_UPDATE_DIR directory
+# (by default etc/local/update)
+#
+# In this example implementation, we simply return the default
+# list of all files in sorted order.
+#
+
+ls | sort

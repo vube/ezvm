@@ -27,12 +27,18 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         # $files is empty, there is no specific file, so list ALL update files and execute them all,
         # possibly applying a filename filter
 
-        if [ -z "$EZVM_EXEC_FILTER" ]; then
+        if [ -x "get-update-list" ]; then
+
+            # There is an application here that will tell us what files to execute
+            log_msg 10 "Executing get-update-list to generate update file list"
+            files="$(./get-update-list)"
+
+        elif [ -z "$EZVM_EXEC_FILTER" ]; then
             # There is no filter, list all update files
-            files=`ls`;
+            files="$(ls | sort)"
         else
             # There is a filter, list all files that match the filter
-            files=$(ls | egrep "$EZVM_EXEC_FILTER")
+            files="$(ls | egrep "$EZVM_EXEC_FILTER" | sort)"
         fi
 
     fi
@@ -60,6 +66,12 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
             continue
         fi
 
+        # Skip the special reserved name "get-update-list"
+        if [ "$(echo "$f" | egrep -iq '^(./)?get-update-list$')" != "" ]; then
+            log_msg 9 "Skip reserved file get-update-list"
+            continue
+        fi
+
     	# See if the filename ends in ".ROOT" or (contains ".ROOT." or "-ROOT-" or some combination thereof)
     	as_user="$USER"
         echo "$f" |  egrep -q '[\.\-]ROOT([\.\-]|$)' && as_user="root"
@@ -71,7 +83,14 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         log_msg 1 "# $command_type command: $f"
         log_msg 1 "#"
 
-        runCommandAsUser "./$f" "$as_user" || die "Exit code=$? from command: $f" $?
+        # IF $f is NOT an absolute filename
+        if [ -z "$(echo "$f" | grep -q '^/')" ]; then
+            # Then remove any leading "./" that MIGHT be there
+            # and add a leading "./" so we KNOW it is there
+            f="./$(echo "$f" | sed -e 's,^\./+,,')"
+        fi
+
+        runCommandAsUser "$f" "$as_user" || die "Exit code=$? from command: $f" $?
 
     done
 
