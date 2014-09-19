@@ -50,4 +50,11 @@ if [ -x "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" ]; then
     log_msg 3 "Executing Local Content self-update-hook"
 
     "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" || die "Local content self-update-hook failed" $?
+
+else
+
+    # There is no executable self-update-hook
+    log_msg 10 "Local content dir contains no executable self-update-hook"
+    log_msg 10 "  tried $EZVM_LOCAL_CONTENT_DIR/self-update-hook"
+
 fi
