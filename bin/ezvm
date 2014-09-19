@@ -5,8 +5,11 @@
 # See ../commands/USAGE.txt for usage information
 #
 
-# EZVM_BASE_DIR is ..
-EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
+if [ -z "$EZVM_BASE_DIR" ]; then
+    # EZVM_BASE_DIR is ..
+    bindir="$($(dirname "$0")/realpath "$0")"
+    export EZVM_BASE_DIR="$(dirname $(dirname "$bindir"))"
+fi
 
 # Slurp up some useful libs
 . $EZVM_BASE_DIR/libs/settings.sh

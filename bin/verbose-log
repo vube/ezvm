@@ -3,8 +3,11 @@
 # Usage: verbose-log [-c prefix_char] [-p prefix] [level]
 #
 
-# EZVM_BASE_DIR is ..
-export EZVM_BASE_DIR="$(dirname $(dirname $(realpath $0)))"
+if [ -z "$EZVM_BASE_DIR" ]; then
+    # EZVM_BASE_DIR is ..
+    bindir="$($(dirname "$0")/realpath "$0")"
+    export EZVM_BASE_DIR="$(dirname $(dirname "$bindir"))"
+fi
 
 # Slurp up some useful libs
 . $EZVM_BASE_DIR/libs/settings.sh
@@ -47,22 +50,29 @@ if [ "$level" -gt "$EZVM_VERBOSITY" ]; then
     exit 0
 fi
 
-# If there is NO input waiting in STDIN then we don't want to wait for it
-# as if we're an interactive program.  We are not.
-if ! read -t 0; then
-    echo "Warning: No input was given to STDIN for $0" 1>&2
-    exit 1
-fi
-
 # Write out the contents of STDIN
 # If there is an OS environment variable (it gets set by Windows, maybe others)
-if [ ! -z $OS ]; then
-    # In Windows we need to send \n\r line endings or the usage isn't readable
-    if echo $OS | grep -i '^Windows' > /dev/null; then
-        cat | sed -e 's,\n,\n\r,g' -e "s,^,$PREFIX,g"
-        exit 0
-    fi
+if [ "$EZVM_IS_WINDOWS" = "YES" ]; then
+    cat | sed -e 's,\n,\n\r,g' -e "s,^,$PREFIX,g"
+    exit 0
 fi
+
+# If there is NO input waiting in STDIN then we don't want to wait for it
+# as if we're an interactive program.  We are not.
+#
+# NOTE: we SKIP this test for Windows platforms, since for some reason
+# (at least in MinGW) `read -t 0` returns FALSE even when there is input
+# waiting on STDIN, so this effectively breaks windows.
+#
+# Skipping on windows means the program may hang if you use verbose-log
+# inappropriately, so please don't.  :)
+#
+#=== Commenting out entirely because it's broken on GCE as well ===
+#
+#if ! read -t 0; then
+#    echo "Warning: No input was given to STDIN for $0" 1>&2
+#    exit 1
+#fi
 
 cat | sed -e "s,^,$PREFIX,g"
 exit 0

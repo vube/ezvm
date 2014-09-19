@@ -35,7 +35,12 @@ $ ln -sf /usr/local/ezvm/bin/ezvm /usr/local/bin/ezvm
 
 ### Install the realpath package
 
-ezvm depends on the `realpath` package.
+ezvm prefers to use the `realpath` package.  While it is not strictly required, it is
+recommended.
+
+Failure to use the `realpath` package may cause ezvm to break if you installed
+it with the symlink method shown above.  If you don't execute `ezvm` from a symlink
+then `realpath` is not needed.
 
 #### Installing realpath via Chef
 
@@ -86,14 +91,14 @@ by default `$EZVM_BASE_DIR/etc/local/update`
 The test procedures here are pretty simple, they execute ezvm and you essentially have to verify
 that it's working manually.  Old school!
 
-## test/test.sh
+## test/unit.sh
 
-This script will test everything.  It executes against the `test/fixtures` directory in a very verbose
-output mode.
+This script will execute the unit tests. It executes all test/tests/*.test scripts unless/until
+one of them experiences an error. It exits cleanly if all tests pass.
 
 ## test/exec.sh
 
-This allows you to run just single update tests, same as `ezvm exec`
+This allows you to run just single update fixture, same as `ezvm exec`
 
 ```bash
 $ test/exec.sh 003-copy-home-dir
@@ -103,3 +108,16 @@ The example above just runs the
 [test/fixtures/update/003-copy-home-dir](browse/test/fixtures/update/003-copy-home-dir)
 update procedure.  Change it up to
 run any specific one you want to test in more detail.
+
+```bash
+$ test/exec.sh -V 100 003-copy-home-dir
+```
+
+Use `-V 100` to enable a huge amount of debugging output, helpful if you are trying to
+figure out why your script isn't working as expected.
+
+## test/end2end.sh
+
+This script executes all of the test update fixtures as if you ran `ezvm update`
+
+If everything works correctly it exits cleanly.

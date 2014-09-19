@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Test the echo fixtures to ensure `ezvm exec XXX` works correctly
+#
+
+. "$(dirname $0)/../include.sh"
+
+
+# Run the normal echo fixture that just writes out its own filename
+test_echo_fixture() {
+	expected="000-echo"
+	x=$(execFixture "-V 0" 000-echo)
+	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
+}
+
+# Run the ROOT version of the echo fixture that writes out its own filename
+test_ROOT_echo_fixture() {
+	expected="001-echo.ROOT"
+	x=$(execFixture "-V 0" 001-echo.ROOT)
+	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
+}
+
+
+autoRunTests

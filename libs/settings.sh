@@ -10,6 +10,18 @@ EZVM_BIN_DIR="$EZVM_BASE_DIR/bin"
 EZVM_COMMANDS_DIR="$EZVM_BASE_DIR/commands"
 EZVM_ETC_DIR="$EZVM_BASE_DIR/etc"
 
+EZVM_IS_WINDOWS=${EZVM_IS_WINDOWS:-""}
+
+if [ -z "$EZVM_IS_WINDOWS" ]; then
+	EZVM_IS_WINDOWS="NO"
+	if [ ! -z "$OS" ]; then
+	    if echo "$OS" | grep -i '^Windows' > /dev/null; then
+	    	EZVM_IS_WINDOWS="YES"
+	    fi
+	fi
+	export EZVM_IS_WINDOWS="$EZVM_IS_WINDOWS"
+fi
+
 
 # Location where we will store/check first time setup status;
 # After first time setup has run this file will exist.

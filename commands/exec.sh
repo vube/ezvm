@@ -50,7 +50,7 @@ END_LOG
 $EZVM_BIN_DIR/verbose-log 20 <<END_LOG
 User: `id`
 Environment:
-`env`
+`env | sort`
 
 END_LOG
 

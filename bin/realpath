@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# Wrapper for realpath
+#
+# Emulate realpath functionality if it is not present on the system
+#
+
+# You can set EZVM_REALPATH_TEST=1 in the env before running this
+# to ignore any installed realpath and test the emulation functionality
+EZVM_REALPATH_TEST=${EZVM_REALPATH_TEST:-}
+
+path="$@"
+
+# Test that EZVM_REALPATH_TEST env variable is working
+if [ ! -z "$EZVM_REALPATH_TEST" -a "$path" = "EZVM_REALPATH_TEST" ]; then
+	echo "EZVM_REALPATH_TEST"
+	exit 0
+fi
+
+# Now use the system realpath if one is available
+rp=$(which realpath 2> /dev/null)
+if [ $? = 0 -a -z "$EZVM_REALPATH_TEST" ]; then
+	exec "$rp" "$path"
+	exit $?
+fi
+
+# There is no realpath available on this system
+# Try to emulate it
+
+if [ -d "$path" ]; then
+
+	# $path exists and is a directory
+
+	wd="$(pwd)"
+	cd "$path"
+
+	# We changed to that directory successfully, find out
+	# the full path to the directory we're in
+	realpath="$(pwd)"
+
+	# cd back where we were when we started
+	cd "$wd"
+
+elif [ -e "$path" ]; then
+
+	# $path exists and is a file
+	wd="$(pwd)"
+	cd "$(dirname "$path")"
+
+	# We changed to that directory successfully, find out
+	# the full path to the directory we're in
+	realpath="$(pwd)/$(basename "$path")"
+
+	# cd back where we were when we started
+	cd "$wd"
+
+else
+
+	# We cannot change to the directory
+
+	# This probably means $path is a file/directory that does not exist
+	# so we either need to calculate things like how many ../ are in the
+	# path, or we can just die and say dude, install realpath
+
+	echo "FATAL: realpath not found on this sytem, please install it"
+	echo "Cannot calculate path to non-existant file: $path"
+	exit 1
+fi
+
+echo $realpath

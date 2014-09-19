@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+
+. "$(dirname $0)/../include.sh"
+
+
+test_copy_home_dir() {
+
+	# Remove the test file from home dir if it exists
+	rm -f "$HOME/ezvm-home-dir-copy-test.txt"
+
+	# Run the script, check its output
+	expected="003-copy-home-dir"
+	x=$(execFixture "-V 0" 003-copy-home-dir)
+	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
+
+	# Make sure the file exists in the home dir
+	if [ -e ]; then
+		# Remove the test file from home dir
+		rm -f "$HOME/ezvm-home-dir-copy-test.txt"
+	else
+		# The file was not created!  We expected it to be.
+		fail "Test file not found in $HOME dir: ezvm-home-dir-copy-test.txt"
+	fi
+}
+
+
+autoRunTests
