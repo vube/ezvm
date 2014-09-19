@@ -1,2 +1,6 @@
+If you've found this in your home directory and you are wondering why,
+it's probably because you ran the ezvm end2end test.  That test copies
+this file to your home directory as part of its procedure.
+
 This is just a test file to ensure that the copy-home-dir.sh lib is
-actually putting this in your home dir.
+actually putting this in your home dir.  You can safely delete it.

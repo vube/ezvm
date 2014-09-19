@@ -26,6 +26,11 @@ END_HELO
 
 "$(dirname $d)/bin/ezvm" update $@ || exit $?
 
+# Now let's do some cleanup stuff.  It's annoying that there is a file
+# in the home directory after running this test.
+
+rm -f "$HOME/ezvm-home-dir-copy-test.txt" 2> /dev/null
+
 cat <<END_BYE
 
 ==========
