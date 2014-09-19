@@ -14,5 +14,5 @@ export EZVM_FIXTURES_DIR="$EZVM_BASE_DIR/test/fixtures"
 
 # Get a list of all the tests, in the order that they should be run
 for f in $(find "$testdir/tests" -type f -name "*.test" -print | sed -e "s,^$testdir/tests/,," | sort); do
-	"$testdir/tests/$f" || die
+	"$testdir/tests/$f" || exit 1
 done

@@ -10,19 +10,19 @@ REALPATH="$(dirname $0)/../../bin/realpath"
 
 # Test that emulation is enabled
 test_ezvm_realpath_tests_are_enabled() {
-	x=$("$REALPATH" "EZVM_REALPATH_TEST")
+	x=$("$REALPATH" "EZVM_REALPATH_TEST")  || fail "Expected fixture to exit 0 but it failed with $?"
 	[ "$x" = "EZVM_REALPATH_TEST" ] || fail "Expected 'EZVM_REALPATH_TEST' != Actual '$x'"
 }
 
 # Test that /tmp path is returned correctly
 test_ezvm_realpath_tmp_dir() {
-	x=$("$REALPATH" "/tmp")
+	x=$("$REALPATH" "/tmp")  || fail "Expected fixture to exit 0 but it failed with $?"
 	[ "$x" = "/tmp" ] || die "Expected '/tmp' != Actual '$x'"
 }
 
 test_ezvm_realpath_tmp_file() {
 	tempf=$(mktemp -t "realpath.XXXXXX")
-	x=$("$REALPATH" "$tempf")
+	x=$("$REALPATH" "$tempf") || fail "Expected realpath to exit 0 but it failed with $?"
 	rm -f "$tempf"
 	[ "$x" = "$tempf" ] || die "Expected '$tempf' != Actual '$x'"
 }

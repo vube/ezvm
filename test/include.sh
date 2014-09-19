@@ -35,7 +35,7 @@ runTest() {
 	EZVM_TEST_COUNT=$(($EZVM_TEST_COUNT + 1))
 
 	printf "%s" "Run test: $EZVM_TEST_FUNCTION "
-	output=$($EZVM_TEST_FUNCTION)
+	output=$($EZVM_TEST_FUNCTION) || exit $?
 	echo "[OK]"
 }
 

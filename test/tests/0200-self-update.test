@@ -10,7 +10,7 @@ test_self_update_hook() {
 
 	# Run the script, check its output
 	expected="self-update-hook"
-	x=$(execEzvm selfupdate -V 0 -T)
+	x=$(execEzvm selfupdate -V 0 -T) || fail "Expected fixture to exit 0 but it failed with $?"
 	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
 }
 
@@ -21,7 +21,7 @@ test_update_with_s_flag_invokes_self_update_hook() {
 
 	# Run the script, check its output
 	expected="self-update-hook"
-	x=$(execEzvm update -s -V 0 -T)
+	x=$(execEzvm update -s -V 0 -T) || fail "Expected fixture to exit 0 but it failed with $?"
 	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
 }
 

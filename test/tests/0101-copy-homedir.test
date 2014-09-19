@@ -11,7 +11,7 @@ test_copy_home_dir() {
 
 	# Run the script, check its output
 	expected="003-copy-home-dir"
-	x=$(execFixture "-V 0" 003-copy-home-dir)
+	x=$(execFixture "-V 0" 003-copy-home-dir) || fail "Expected fixture to exit 0 but it failed with $?"
 	[ "$x" = "$expected" ] || fail "Expected '$expected' != Actual '$x'"
 
 	# Make sure the file exists in the home dir
