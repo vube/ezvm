@@ -30,8 +30,11 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         if [ -x "get-update-list" ]; then
 
             # There is an application here that will tell us what files to execute
+            # Note: If get-update-list fails, that means something is wrong with the
+            # local update files, and we should die
+
             log_msg 10 "Executing get-update-list to generate update file list"
-            files="$(./get-update-list)"
+            files="$(./get-update-list)" || die "get-update-list failed with code $?"
 
         elif [ -z "$EZVM_EXEC_FILTER" ]; then
             # There is no filter, list all update files
@@ -67,9 +70,14 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         fi
 
         # Skip the special reserved name "get-update-list"
-        if [ "$(echo "$f" | egrep -iq '^(./)?get-update-list$')" != "" ]; then
-            log_msg 9 "Skip reserved file get-update-list"
-            continue
+        if [ "$(echo "$f" | egrep -i '^(./)?get-update-list$')" != "" ]; then
+            # If they specifically ran this with `ezvm exec get-update-list` then let it run
+            # Otherwise DO NOT let it run, it's a reserved name
+            if [ "$f" != "$EZVM_EXEC_FILE" ]; then
+                # They did not invoke with `ezvm exec get-update-list`
+                log_msg 9 "Skip reserved file get-update-list"
+                continue
+            fi
         fi
 
     	# See if the filename ends in ".ROOT" or (contains ".ROOT." or "-ROOT-" or some combination thereof)
@@ -79,18 +87,23 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         command_type="Update"
         [ "$as_user" = "root" ] && command_type="ROOT Update"
 
-        log_msg 1 "#"
-        log_msg 1 "# $command_type command: $f"
-        log_msg 1 "#"
+        # No prefix if $f is an absolute filename
+        prefix=""
 
         # IF $f is NOT an absolute filename
         if [ "$(echo "$f" | grep -q '^/')" = "" ]; then
             # Then remove any leading "./" that MIGHT be there
             # and add a leading "./" so we KNOW it is there
-            f="./$(echo "$f" | sed -e 's,^\.//*,,')"
+            f="$(echo "$f" | sed -e 's,^\.//*,,')"
+            # For relative filenames, prefix with "./" to execute them
+            prefix="./"
         fi
 
-        runCommandAsUser "$f" "$as_user" || die "Exit code=$? from command: $f" $?
+        log_msg 1 "#"
+        log_msg 1 "# $command_type command: $f"
+        log_msg 1 "#"
+
+        runCommandAsUser "$prefix$f" "$as_user" || die "Exit code=$? from command: $f" $?
 
     done
 
