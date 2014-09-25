@@ -72,7 +72,17 @@ runCommandAsUser() {
     local r=0
     local ran=0
 
-    if [ $EZVM_HAVE_SUDO = 1 ]; then
+    log_msg 80 "runCommandAsUser $user $command"
+    log_msg 80 "have sudo = $EZVM_HAVE_SUDO; have root = $EZVM_HAVE_ROOT"
+    log_msg 80 "current dir: $(pwd)"
+
+    if [ "$user" = "$USER" ]; then
+
+        # We want to run this as ourselves.  No need to sudo or su or whatever
+        # to do that. Skip all this logic and go to the bottom.
+        ran=0
+
+    elif [ $EZVM_HAVE_SUDO = 1 ]; then
 
         # We have sudo on this system
         # sudo -E means preserve ENV vars, it's vital to ezvm that we preserve ENV
@@ -81,6 +91,7 @@ runCommandAsUser() {
         # we use `env USER=$user $command` because otherwise the $USER still says
         # we are who we were before the sudo su (due to preserve env I guess), and
         # that is not desired.
+        log_msg 80 "sudo -E su '$user' -m -c 'env USER=$user $command'"
         sudo -E su "$user" -m -c "env USER=$user $command"
         r=$?
         ran=1

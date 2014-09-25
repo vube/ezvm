@@ -101,7 +101,15 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
 
         log_msg 1 "#"
         log_msg 1 "# $command_type command: $f"
+        log_msg 5 "# Current Dir: $(pwd)"
         log_msg 1 "#"
+
+        if [ -e "$f" ]; then
+            log_msg 80 "# File $f does exist"
+            log_msg 80 "# If you are getting errors about file not existing here,"
+            log_msg 80 "# it means your hashbang is wrong in the script we are trying"
+            log_msg 80 "# to run. Have a CRLF in it maybe? :)"
+        fi
 
         runCommandAsUser "$prefix$f" "$as_user" || die "Exit code=$? from command: $f" $?
 
