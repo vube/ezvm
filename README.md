@@ -33,28 +33,6 @@ OR you can symlink `ezvm` from `/usr/local/bin` assuming that is already in your
 $ ln -sf /usr/local/ezvm/bin/ezvm /usr/local/bin/ezvm
 ```
 
-### Install the realpath package
-
-ezvm prefers to use the `realpath` package.  While it is not strictly required, it is
-recommended.
-
-Failure to use the `realpath` package may cause ezvm to break if you installed
-it with the symlink method shown above.  If you don't execute `ezvm` from a symlink
-then `realpath` is not needed.
-
-#### Installing realpath via Chef
-
-```ruby
-package "realpath"
-```
-
-#### Installing realpath by hand
-
-```bash
-$ sudo apt-get install realpath
-```
-
-
 ## Usage
 
 After you configure ezvm, you can use it thusly:

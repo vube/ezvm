@@ -3,15 +3,13 @@
 # Test that ezvm is working
 #
 
-testdir="$(dirname $0)"
+testdir="$(dirname "$(readlink -f "$0")")"
 
-export EZVM_BASE_DIR="$(dirname $("$testdir/../bin/realpath" "$testdir"))"
+export EZVM_BASE_DIR="$(dirname "$testdir")"
 
 . "$testdir/include.sh"
 
-d=$("$testdir/../bin/realpath" "$testdir")
-
-export EZVM_LOCAL_CONTENT_DIR="$d/fixtures"
+export EZVM_LOCAL_CONTENT_DIR="$testdir/fixtures"
 
 cat <<END_HELO
 
@@ -23,7 +21,7 @@ At the end you will see a success message.
 
 END_HELO
 
-"$(dirname $d)/bin/ezvm" update -s $@ || exit $?
+"$(dirname "$testdir")/bin/ezvm" update -s $@ || exit $?
 
 # Now let's do some cleanup stuff.  It's annoying that there is a file
 # in the home directory after running this test.

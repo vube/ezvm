@@ -3,9 +3,9 @@
 # Run unit tests
 #
 
-testdir="$(dirname $0)"
+testdir="$(dirname "$(readlink -f "$0")")"
 
-export EZVM_BASE_DIR="$(dirname $("$testdir/../bin/realpath" "$testdir"))"
+export EZVM_BASE_DIR="$(dirname "$testdir")"
 export EZVM_FIXTURES_DIR="$EZVM_BASE_DIR/test/fixtures"
 
 . "$testdir/include.sh"

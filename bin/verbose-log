@@ -5,7 +5,7 @@
 
 if [ -z "$EZVM_BASE_DIR" ]; then
     # EZVM_BASE_DIR is ..
-    bindir="$($(dirname "$0")/realpath "$0")"
+    bindir="$(dirname "$(readlink -f "$0")")"
     export EZVM_BASE_DIR="$(dirname $(dirname "$bindir"))"
 fi
 

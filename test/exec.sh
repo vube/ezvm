@@ -1,9 +1,8 @@
 #!/bin/sh
 
-testdir="$(dirname $0)"
-d=$("$testdir/../bin/realpath" "$testdir")
+d="$(dirname "$(readlink -f "$0")")"
 
 export EZVM_UPDATE_DIR="$d/fixtures/update"
 export EZVM_HOME_SRC="$d/fixtures/home"
 
-exec $(dirname $d)/bin/ezvm exec -V 100 $@
+exec "$(dirname $d)/bin/ezvm" exec -V 100 $@
