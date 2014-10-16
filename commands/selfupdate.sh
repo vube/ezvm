@@ -45,11 +45,18 @@ fi
 # Now if there is a self-update-hook in the local content dir,
 # execute that so the local content can update itself.
 
-if [ -x "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" ]; then
+if [ -r "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" ]; then
 
-    log_msg 3 "Executing Local Content self-update-hook"
+    if [ -x "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" ]; then
 
-    "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" || die "Local content self-update-hook failed" $?
+        log_msg 3 "Executing Local Content self-update-hook"
+
+        "$EZVM_LOCAL_CONTENT_DIR/self-update-hook" || die "Local content self-update-hook failed" $?
+
+    else
+        log_msg 1 "Notice: self-update-hook exists but is not executable: $EZVM_LOCAL_CONTENT_DIR/self-update-hook"
+        log_msg 1 "Notice: Not updating local content. Make self-update-hook executable to enable it."
+    fi
 
 else
 
