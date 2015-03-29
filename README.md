@@ -49,6 +49,16 @@ $ ezvm selfupdate
 
 The above will update ezvm itself to the latest release.
 
+```bash
+$ ezvm exec get-update-list
+```
+
+The above command will print a list of all of the local updates that will be applied
+when you run `ezvm update`
+
+These commands aren't actually executed during this command, they are just printed
+for your reference.
+
 
 ## Configuration
 
@@ -102,6 +112,20 @@ and that user's home directory will be copied.
 ### ezvm exec
 
 This is useful for testing your local update procedures.
+
+#### ezvm exec get-update-list
+
+```bash
+$ ezvm exec get-update-list
+```
+
+The above command will print a list of all of the local updates that will be applied
+when you run `ezvm update`
+
+These commands aren't actually executed during this command, they are just printed
+for your reference.
+
+#### ezvm exec <update_script>
 
 ```bash
 $ ezvm exec 010-update-script.sh
