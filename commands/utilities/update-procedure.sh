@@ -34,7 +34,23 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
             # local update files, and we should die
 
             log_msg 10 "Executing get-update-list to generate update file list"
-            files="$(./get-update-list)" || die "get-update-list failed with code $?"
+
+            tmp="$(mktemp -t ezvm.XXXXXX)"
+            ./get-update-list > $tmp || die "get-update-list failed with code $?"
+
+            # It's useful to allow get-update-list to print debug info
+            # Ignore all lines prefixed with DEBUG:, those are not update files
+            files=$(cat $tmp | grep -v "^DEBUG:")
+
+            # If there is debug info in the get-update-list output, send it through
+            # so we can see it when we are running ezvm
+            tmp2="$(mktemp -t ezvm.XXXXXX)"
+            cat $tmp | grep "^DEBUG:" > $tmp2
+            if [ -s $tmp2 ]; then
+                log_msg 1 "$(cat $tmp2)"
+            fi
+
+            rm -f $tmp $tmp2
 
         elif [ -z "$EZVM_EXEC_FILTER" ]; then
             # There is no filter, list all update files
