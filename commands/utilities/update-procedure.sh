@@ -40,7 +40,8 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
 
             # It's useful to allow get-update-list to print debug info
             # Ignore all lines prefixed with DEBUG:, those are not update files
-            files=$(cat $tmp | grep -v "^DEBUG:")
+            # Also ignore any comments (lines beginning with # or -)
+            files=$(cat $tmp | grep -v "^DEBUG:" | grep -v "^[#\-]")
 
             # If there is debug info in the get-update-list output, send it through
             # so we can see it when we are running ezvm
