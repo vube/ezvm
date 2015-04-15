@@ -50,7 +50,7 @@ END_LOG
 $EZVM_BIN_DIR/verbose-log 20 <<END_LOG
 User: `id`
 Environment:
-`env | sort`
+`env | sort | grep -v "^LS_COLORS="`
 
 END_LOG
 
