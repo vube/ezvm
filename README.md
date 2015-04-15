@@ -60,6 +60,23 @@ These commands aren't actually executed during this command, they are just print
 for your reference.
 
 
+## Output Verbosity
+
+Output verbosity is set via the `EZVM_VERBOSITY` environment variable.  By default it = `1`.
+
+`EZVM_VERBOSITY` can be set from any value from `1-100`
+
+The meanings are as follows:
+
+```text
+Level  Description
+-----  --------------------------------
+   1   Notice - Default verbosity level
+  10   Info
+  50+  Debug
+  80+  Trace (LOTS of output)
+```
+
 ## Configuration
 
 ### etc/local Directory

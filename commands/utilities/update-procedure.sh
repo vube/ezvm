@@ -34,7 +34,32 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
             # local update files, and we should die
 
             log_msg 10 "Executing get-update-list to generate update file list"
-            files="$(./get-update-list)" || die "get-update-list failed with code $?"
+
+            tmp="$(mktemp -t ezvm.XXXXXX)"
+            ./get-update-list > $tmp || die "get-update-list failed with code $?"
+
+            # It's useful to allow get-update-list to print debug info
+            # Ignore all lines prefixed with DEBUG:, those are not update files
+            # Also ignore any comments (lines beginning with # or -)
+            files=$(cat $tmp | grep -v "^DEBUG:" | grep -v "^[#\-]")
+
+            # If there is debug info in the get-update-list output, send it through
+            # so we can see it when we are running ezvm
+            tmp2="$(mktemp -t ezvm.XXXXXX)"
+            cat $tmp | grep "^DEBUG:" > $tmp2
+            if [ -s $tmp2 ]; then
+                # Log this at DEBUG level; you need to turn up verbosity to see this
+                log_msg 50 "$(cat $tmp2 | sed -e 's,^,get-update-list: ,g')"
+            fi
+
+            # Clean up temp files
+            rm -f $tmp $tmp2
+
+            log_msg 50 "get-update-list Returned these files:"
+
+            for f in $files; do
+                log_msg 50 "  - $f"
+            done
 
         elif [ -z "$EZVM_EXEC_FILTER" ]; then
             # There is no filter, list all update files
@@ -104,14 +129,22 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         log_msg 5 "# Current Dir: $(pwd)"
         log_msg 1 "#"
 
-        if [ -e "$f" ]; then
-            log_msg 80 "# File $f does exist"
-            log_msg 80 "# If you are getting errors about file not existing here,"
-            log_msg 80 "# it means your hashbang is wrong in the script we are trying"
-            log_msg 80 "# to run. Have a CRLF in it maybe? :)"
-        fi
+        runCommandAsUser "$prefix$f" "$as_user"
+        r=$?
 
-        runCommandAsUser "$prefix$f" "$as_user" || die "Exit code=$? from command: $f" $?
+        if [ "$r" != 0 ]; then
+
+            log_msg 1 "# ERROR running command $f; exit code=$r"
+
+            if [ -e "$f" ]; then
+                log_msg 1 "File $f does exist"
+                log_msg 1 "If you are getting errors about file not existing here,"
+                log_msg 1 "it means your hashbang is wrong in the script we are trying"
+                log_msg 1 "to run. Have a CRLF in it maybe? :)"
+            fi
+
+            die "Exit code=$r from command: $f" $r
+        fi
 
     done
 

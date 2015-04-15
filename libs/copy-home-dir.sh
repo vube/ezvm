@@ -48,6 +48,6 @@ copy_home_dir() {
 
     else
 
-        log_msg 10 "Notice: No home dir source dir exists: $EZVM_HOME_SRC"
+        log_msg 10 "No home dir source dir exists: $EZVM_HOME_SRC"
     fi
 }

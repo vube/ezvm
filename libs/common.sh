@@ -18,7 +18,7 @@ die() {
 changeDir() {
     local dir="$1"
 
-    log_msg 11 "cd $dir"
+    log_msg 80 "cd $dir"
     cd "$dir" || die "Cannot cd $dir"
 }
 
