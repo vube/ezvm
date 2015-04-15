@@ -55,6 +55,12 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
             # Clean up temp files
             rm -f $tmp $tmp2
 
+            log_msg 50 "get-update-list Returned these files:"
+
+            for f in $files; do
+                log_msg 50 "  - $f"
+            done
+
         elif [ -z "$EZVM_EXEC_FILTER" ]; then
             # There is no filter, list all update files
             files="$(ls | sort)"
