@@ -1,6 +1,7 @@
 
-Usage: ezvm exec [-d /dir] [-q] [-V x] update_filename
-       ezvm exec [-d /dir] [-q] [-V x] -F update_filename_egrep_expression
+Usage: ezvm exec [-d /dir] [-q] [-T] [-V x] update_filename
+       ezvm exec [-d /dir] [-q] [-T] [-V x] -F update_filename_egrep_expression
+       ezvm exec -h
 
     update_filename should be the name of a file in your local update directory.
 
@@ -8,6 +9,9 @@ Usage: ezvm exec [-d /dir] [-q] [-V x] update_filename
     file with a name matching the expression will be executed.
 
     -d      Override the local content dir. Default: $EZVM_BASE_DIR/etc/local
+    -h      Print this help screen.
     -q      Quiet.  Don't print status updates and diagnostic info.  Sets verbosity level = 0.
+    -T      Test mode.  Don't actually exec, just show us what would have been executed.
     -V x    Set verbosity level to x.  Higher verbosity levels result in more output, mainly
             good for debugging.  Default: 1
+

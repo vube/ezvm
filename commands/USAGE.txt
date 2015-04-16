@@ -1,7 +1,13 @@
 
 Usage: ezvm <command>
+       ezvm <command> -h
+
+Passing the -h flag will print a help screen specific to the command.
 
 Where <command> is one of:
 
-    help    Print this screen and exit.
-    update  Update the ezvm installation.
+    exec        Execute a specific update command.
+    help        Print this screen and exit.
+    selfupdate  Update the ezvm installation.
+    update      Update the ezvm installation.
+

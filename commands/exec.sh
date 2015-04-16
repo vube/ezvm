@@ -7,8 +7,11 @@
 WITH_SELF_UPDATE=0
 
 ORIGINAL_ARGS=$@
+EZVM_TEST_MODE=${EZVM_TEST_MODE:-0}
 
-while getopts ":d:F:qV:" flag; do
+EZVM_EXEC_FILTER=""
+
+while getopts ":d:F:hqTV:" flag; do
     case "$flag" in
         d)
             EZVM_LOCAL_CONTENT_DIR="$OPTARG"
@@ -16,8 +19,13 @@ while getopts ":d:F:qV:" flag; do
         F)
             EZVM_EXEC_FILTER="$OPTARG"
             ;;
+        h)
+            printUsageAndExit ;;
         q)
             export EZVM_VERBOSITY=0
+            ;;
+        T)
+            export EZVM_TEST_MODE=1
             ;;
         V)
             export EZVM_VERBOSITY="$OPTARG"
@@ -28,13 +36,21 @@ while getopts ":d:F:qV:" flag; do
 done
 shift $((OPTIND-1))
 
-# If there is an extra arg, that is the update file
-if [ ! -z "$1" ]; then
-    EZVM_EXEC_FILE="$1"
-    if [ ! -z "$EZVM_EXEC_FILTER" ]; then
-        log_msg 1 "Warning: Ignoring your exec filter, you passed a specific exec filename"
-        log_msg 1 "Warning: See usage for more info."
+# Additional arguments
+EZVM_EXEC_FILE="${@:-}"
+
+# If they did NOT give us a filter, then additional arguments are required
+if [ -z "$EZVM_EXEC_FILTER" ]; then
+    if [ -z "$EZVM_EXEC_FILE" ]; then
+        # Lack of additional arguments means we have nothing to exec, that's a usage error
+        printUsageAndExit
     fi
+elif [ ! -z "$EZVM_EXEC_FILE" ]; then
+    # Filter is not empty, and file is not empty
+    # That's a paradox, you can't specify them both.  Ignore the filter.
+    log_msg 1 "WARNING: Ignoring your exec filter, you passed specific update args"
+    log_msg 1 "WARNING: See usage for more info."
+    EZVM_EXEC_FILTER=""
 fi
 
 $EZVM_BIN_DIR/verbose-log 2 <<END_LOG
