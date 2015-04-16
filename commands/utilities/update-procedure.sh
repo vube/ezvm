@@ -10,6 +10,8 @@ EZVM_UPDATE_DIR=${EZVM_UPDATE_DIR:-"$EZVM_LOCAL_CONTENT_DIR/update"}
 EZVM_EXEC_FILE=${EZVM_EXEC_FILE:-""}
 EZVM_EXEC_FILTER=${EZVM_EXEC_FILTER:-""}
 
+EZVM_TEST_MODE=${EZVM_TEST_MODE:-0}
+
 $EZVM_BIN_DIR/verbose-log 2 <<END_LOG
 commands/utilities/update-procedure.sh
 
@@ -20,7 +22,7 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
 
     changeDir "$EZVM_UPDATE_DIR"
 
-    # If they gave us one specific file to execute, set $files
+    # If they gave us one or more specific files to execute, set $files
     files="$EZVM_EXEC_FILE"
 
     if [ -z "$files" ]; then
@@ -70,6 +72,24 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         fi
 
     fi
+
+    # Resolve any directories that need to be executed
+    # Expand the directories to a list of files in the directory.
+
+    filesExpanded=""
+
+    for f in $files; do
+        # If this is a directory, then expand it to the files inside that directory
+        # This is NOT a recursive expansion
+        if [ -d "$f" ]; then
+            log_msg 9 "Expand exec directory: $f"
+            filesExpanded="$filesExpanded $(find "$f" -maxdepth 1 -type f -print | sort)"
+        else
+            filesExpanded="$filesExpanded $f"
+        fi
+    done
+
+    files="$filesExpanded"
 
     # For every file that we want to execute, execute it
 
@@ -129,8 +149,13 @@ if [ -d "$EZVM_UPDATE_DIR" ]; then
         log_msg 5 "# Current Dir: $(pwd)"
         log_msg 1 "#"
 
-        runCommandAsUser "$prefix$f" "$as_user"
-        r=$?
+        if [ "$EZVM_TEST_MODE" = 0 ]; then
+            runCommandAsUser "$prefix$f" "$as_user"
+            r=$?
+        else
+            log_msg 1 "# TEST MODE: Would have executed as $as_user: $prefix$f"
+            r=0
+        fi
 
         if [ "$r" != 0 ]; then
 
