@@ -1,12 +1,9 @@
 
-Usage: ezvm update [-d /dir] [-q] [-s] [-T] [-V x]
-       ezvm update -h
+Usage: ezvm selfupdate [-q] [-T] [-V x]
+       ezvm selfupdate -h
 
-    -d      Override the local content dir. Default: $EZVM_BASE_DIR/etc/local
     -h      Print this help screen.
     -q      Quiet.  Don't print status updates and diagnostic info.  Sets verbosity level = 0.
-    -s      Selfupdate before running the VM update procedure.
-    -S      NO Selfupdate before running the VM update procedure. This is the default.
     -T      Test mode. Don't actually update anything, just show what would have been done.
     -V x    Set verbosity level to x.  Higher verbosity levels result in more output, mainly
             good for debugging.  Default: 1

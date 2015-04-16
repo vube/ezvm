@@ -8,7 +8,9 @@ WITH_SELF_UPDATE=0
 
 ORIGINAL_ARGS=$@
 
-while getopts ":d:F:qV:" flag; do
+EZVM_EXEC_FILTER=""
+
+while getopts ":d:F:hqV:" flag; do
     case "$flag" in
         d)
             EZVM_LOCAL_CONTENT_DIR="$OPTARG"
@@ -16,6 +18,8 @@ while getopts ":d:F:qV:" flag; do
         F)
             EZVM_EXEC_FILTER="$OPTARG"
             ;;
+        h)
+            printUsageAndExit ;;
         q)
             export EZVM_VERBOSITY=0
             ;;

@@ -7,6 +7,8 @@ EZVM_TEST_MODE=${EZVM_TEST_MODE:-0}
 
 while getopts ":qTV:" flag; do
     case "$flag" in
+        h)
+            printUsageAndExit ;;
         q)
             export EZVM_VERBOSITY=0
             ;;

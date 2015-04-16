@@ -9,11 +9,13 @@ EZVM_TEST_MODE=${EZVM_TEST_MODE:-0}
 
 ORIGINAL_ARGS=$@
 
-while getopts ":d:qsSTV:" flag; do
+while getopts ":d:hqsSTV:" flag; do
     case "$flag" in
         d)
             EZVM_LOCAL_CONTENT_DIR="$OPTARG"
             ;;
+        h)
+            printUsageAndExit ;;
         q)
             export EZVM_VERBOSITY=0
             ;;
